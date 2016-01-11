@@ -192,6 +192,7 @@ class IssueInfoController extends Controller {
    }
 
    /**
+         $tooltipAttr[T_('Deadline')] = Tools::formatDate("%d %b %Y", $deadline);
     * Get the calendar of an issue
     * @param Issue $issue The issue
     * @param TimeTrack[] $trackList
