@@ -142,6 +142,7 @@ class ProjectActivityReportController extends Controller {
                'progress' => round(100 * $issue->getProgress()),
                'backlog' => $issue->getBacklog(),
                'totalTime' => $totalTime,
+               'commands' => implode (",<br>", $issue->getCommandList())
             );
          }
 
