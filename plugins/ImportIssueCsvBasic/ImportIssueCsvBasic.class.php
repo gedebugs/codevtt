@@ -1,10 +1,20 @@
 <?php
-
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+   This file is part of CodevTT
+
+   CodevTT is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   CodevTT is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with CodevTT.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 /**
  * Description of ImportIssueCsvBasic
@@ -42,18 +52,16 @@ class ImportIssueCsvBasic  extends IndicatorPluginAbstract {
 
       self::$domains = array (
          self::DOMAIN_IMPORT_EXPORT,
-         self::DOMAIN_TEAM, // TODO for debug only
       );
       self::$categories = array (
-         //self::CATEGORY_IMPORT
-         self::CATEGORY_TEAM // TODO for debug only
+         self::CATEGORY_IMPORT,
       );
    }
 
    public static function getName() {
       return 'CSV issue import (basic)';
    }
-   public static function getDesc() {
+   public static function getDesc($isShortDesc = true) {
       return 'Import a list of issues to MantisBT / CodevTT';
    }
    public static function getAuthor() {
@@ -93,6 +101,8 @@ class ImportIssueCsvBasic  extends IndicatorPluginAbstract {
     * @throws Exception
     */
    public function initialize(PluginDataProviderInterface $pluginDataProv) {
+
+      self::$logger->error("Params = ".var_export($pluginDataProv, true));
 
       if (NULL != $pluginDataProv->getParam(PluginDataProviderInterface::PARAM_TEAM_ID)) {
          $this->teamid = $pluginDataProv->getParam(PluginDataProviderInterface::PARAM_TEAM_ID);
@@ -202,6 +212,7 @@ class ImportIssueCsvBasic  extends IndicatorPluginAbstract {
       if (NULL !== $err_msg) {
          throw new Exception($err_msg);
       }
+      self::$logger->error('tmpFilename='. $tmpFilename);
       return $tmpFilename;
    }
    
@@ -216,13 +227,14 @@ class ImportIssueCsvBasic  extends IndicatorPluginAbstract {
       $issues = array();
 
       $file = new SplFileObject($filename);
-      /* Can't be use with PHP 5.1
+      // Can't be use with PHP 5.1
       $file->setFlags(SplFileObject::READ_CSV);
       $file->setCsvControl($delimiter,$enclosure,$escape);
       foreach ($file as $row) {
-         var_dump($row);
+         //var_dump($row);
+         self::$logger->error('SplFileObject row='.  var_export($row, true));
       }
-      */
+      
       $row = 0;
       while (!$file->eof()) {
          while ($data = $file->fgetcsv($delimiter,$enclosure)) {

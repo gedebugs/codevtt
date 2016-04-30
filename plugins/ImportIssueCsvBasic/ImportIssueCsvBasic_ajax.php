@@ -22,21 +22,24 @@ require('../../path.inc.php');
 // Note: i18n is included by the Controler class, but Ajax dos not use it...
 require_once('i18n/i18n.inc.php');
 
-if(Tools::isConnectedUser() && filter_input(INPUT_POST, 'action')) {
+if(Tools::isConnectedUser() && filter_input(INPUT_GET, 'action')) {
 
    $logger = Logger::getLogger("ImportIssueCsvBasic_ajax");
-   $action = filter_input(INPUT_POST, 'action');
+   $action = filter_input(INPUT_GET, 'action');
+   $dashboardId = filter_input(INPUT_GET, 'dashboardId');
 
-   if(!isset($_SESSION[PluginDataProviderInterface::SESSION_ID])) {
+   if(!isset($_SESSION[PluginDataProviderInterface::SESSION_ID.$dashboardId])) {
+      $logger->error("PluginDataProvider not set (dashboardId = $dashboardId");
       Tools::sendBadRequest("PluginDataProvider not set");
    }
-   $pluginDataProvider = unserialize($_SESSION[PluginDataProviderInterface::SESSION_ID]);
+   $pluginDataProvider = unserialize($_SESSION[PluginDataProviderInterface::SESSION_ID.$dashboardId]);
    if (FALSE == $pluginDataProvider) {
+      $logger->error("PluginDataProvider unserialize error (dashboardId = $dashboardId");
       Tools::sendBadRequest("PluginDataProvider unserialize error");
    }
    
    if ('uploadCsvFile' === $action) {
-      $projectid = Tools::getSecurePOSTIntValue('projectid');
+      $projectid = Tools::getSecureGETIntValue('projectid');
 
       $logger->error('ajax $_FILES='.  var_export($_FILES, true));
       
