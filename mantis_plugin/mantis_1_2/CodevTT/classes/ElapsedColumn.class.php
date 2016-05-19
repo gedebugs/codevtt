@@ -40,7 +40,7 @@ class ElapsedColumn extends MantisColumn {
    * @param integer $p_columns_target Column display target.
    * @return void
    */   
-   public function display( BugData $p_bug, $p_columns_target ) {
+   public function display( $p_bug, $p_columns_target ) {
       if ( isset( $this->cache[$p_bug->id] ) ) {
          if ( $p_columns_target == COLUMNS_TARGET_VIEW_PAGE ||
             $p_columns_target == COLUMNS_TARGET_PRINT_PAGE

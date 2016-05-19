@@ -71,7 +71,7 @@ class CommandColumn extends MantisColumn {
    * @param integer $p_columns_target Column display target.
    * @return void
    */   
-   public function display( BugData $p_bug, $p_columns_target ) {
+   public function display( $p_bug, $p_columns_target ) {
       //require_api( 'logging_api.php' );
       //log_event(LOG_FILTERING, "display( $p_bug->id )");
 

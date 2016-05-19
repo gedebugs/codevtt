@@ -35,7 +35,7 @@ class CodevTTPlugin extends MantisPlugin {
     require_once( 'classes/FilterCommandField.class.php' );
     require_once( 'classes/CommandColumn.class.php' );
     require_once( 'classes/ElapsedColumn.class.php' );
-    require_api( 'logging_api.php' );
+    //require_api( 'logging_api.php' );
   }
 
    /**
