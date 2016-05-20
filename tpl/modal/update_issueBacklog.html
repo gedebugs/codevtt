@@ -51,9 +51,21 @@
                   <td><input type="text" id="backlog" name="backlog" size="3" class="text" /></td>
                   <td><label id="validateTips" class="error_font" ></label></td>
                </tr>
+               {if $isU0Displayed}
+               <tr>
+                  <th><label for="UO">UO :</label></th>
+                  <td><input type="text" id="UO" name="UO" size="3" class="text" /></td>
+                  <td><label id="validateTips" class="error_font" ></label></td>
+               </tr>
+               {/if}
             </tbody>
          </table>
-
+         
+         {if $isTrackNoteDisplayed}
+         <p><b>{t}Note{/t}:</b><br>
+         <textarea class="issue_note" name="issue_note"  style="width:100%;background-color:white;" rows="2"></textarea>
+         {/if}
+         
          <input type="hidden" name="action" value="unknown" />
 
          <!-- fields for addTrack action -->
@@ -98,9 +110,9 @@
 			formGetUpdateBacklogData.find("input[name=trackJobid]").val(jobid);
 			formGetUpdateBacklogData.find("input[name=trackDuration]").val(timeToAdd);
 			formGetUpdateBacklogData.find("input[name=trackDate]").val(trackDate);
-
+         
 			var deferred = jQuery.Deferred();
-
+         
 			jQuery.ajax({
 				type: formGetUpdateBacklogData.attr("method"),
 				dataType:"json",
@@ -250,12 +262,14 @@
       function changeBackLogValue(previousStatus) {
          var bugResolvedStatusThreshold = jQuery("#bugResolvedStatusThreshold").val();
          var selectedStatusId = jQuery("#status").children(":selected").attr("id");
-         if(selectedStatusId >= bugResolvedStatusThreshold) {
+         
+         if(selectedStatusId >= bugResolvedStatusThreshold)
+         {
             $("#backlog").val("0");
          }
          if(selectedStatusId < bugResolvedStatusThreshold && previousStatus >= bugResolvedStatusThreshold) {
-             $("#backlog").val("");
-          }
+            $("#backlog").val("");
+         }
       }
       
 	jQuery(document).ready(function() {
@@ -263,17 +277,23 @@
       // add eventHandler to update formUpdateBacklog field when status is changed in combobox
       jQuery('#status').on('focus', function () {
          previousStatus = jQuery("#status").children(":selected").attr("id");
-      }).on('change', function() {
+      }).change(function() {
          jQuery("#status").blur();
          changeBackLogValue(previousStatus);
          var selectedStatusId = jQuery("#status").children(":selected").attr("id");
          jQuery("#formUpdateBacklog").find("input[name=statusid]").val(selectedStatusId);
       });
-
-		var backlog = jQuery("#backlog"),
-			 tips = jQuery("#validateTips"),
-			 allFields = jQuery([]).add(backlog);
-
+      
+      var backlog = $("#backlog");
+      var tips = $("#validateTips");
+      
+		var allFields = $([]).add(backlog);
+      
+      {if $isU0Displayed}
+      var UO = $('#UO');
+      allFields = $([]).add(UO);
+      {/if}
+         
 		function updateTips(t) {
 			tips.text(t);
 			//tips.addClass("ui-state-highlight");
@@ -307,10 +327,9 @@
 		}
 
 		function isBacklogDialogFieldsValid() {
-
 			var bValid = true;
-			allFields.removeClass("ui-state-error");
-			bValid = bValid && checkRegexp(jQuery("#backlog"), /^[0-9]+(\.[0-9][0-9]?5?)?$/i, "format:  '1',  '0.3'  or  '2.55' or '2.125'");
+			backlog.removeClass("ui-state-error");
+			bValid = bValid && checkRegexp(jQuery("#backlog"), /^[0-9]+(\.[0-9][0-9]?5?)?$/i, "format:  '1',  '0.3'  or  '2.55' or '2.125'") {if $isU0Displayed} && checkRegexp(jQuery("#UO"), /^[0-9]+(\.[0-9][0-9]?5?)?$/i, "format:  '1',  '0.3'  or  '2.55' or '2.125'" ) {/if} ;
 			
 			var bugResolvedStatusThreshold = jQuery("#bugResolvedStatusThreshold").val();
 			var bugStatusNew = jQuery("#bugStatusNew").val();
@@ -347,6 +366,10 @@
 				allFields.val("").removeClass("ui-state-error");
 				allFields.css("backgroundColor", "transparent");
             updateTips(""); // the window is reused for BL updates
+            {if $isTrackNoteDisplayed}
+            $('.issue_note').val('');
+            {/if}
+
 			}
 		});
 
@@ -357,10 +380,10 @@
 
          /* stop form from submitting normally */
          event.preventDefault();
-
 			var bValid = isBacklogDialogFieldsValid();
 			if (bValid) {
 				var formUpdateBacklog = jQuery(this);
+
 				jQuery.ajax({
 					// the formUpdateBacklog is also used as a 'normal' form
 					// (in time_tracking.html). To be used as an Ajax form
