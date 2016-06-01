@@ -278,7 +278,6 @@ class TimeTrack extends Model {
    }
    
       public static function setNote($bug_id, $track_id, $text, $reporter_id) {
-      $issue = IssueCache::getInstance()->getIssue($bug_id);
       $timetrack = TimeTrackCache::getInstance()->getTimeTrack($track_id);
       self::$logger->debug("Task $bug_id setTimesheetNote:[$text]");
       
