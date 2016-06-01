@@ -270,8 +270,8 @@ class TimeTrack extends Model {
          else
          {
             $row = SqlWrapper::getInstance()->sql_fetch_object($result);
-            $buffer = preg_replace('/<!--(.|\s)*?-->/', '', $row->note);
-            $this->note = trim($buffer);
+            $pattern = '/^'.IssueNote::tag_begin.IssueNote::tagid_timetrackNote.'.*'.IssueNote::tag_end.'\n/';
+            $this->note = trim(preg_replace($pattern, '', $row->note));
          }
      }
      return $this->note;
