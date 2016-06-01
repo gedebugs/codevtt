@@ -94,7 +94,7 @@ class IssueNote {
       
       $timestamp = time();
       
-      if($date_submitted=NULL){
+      if(NULL == $date_submitted){
          $date_submitted = $timestamp;
       }
       

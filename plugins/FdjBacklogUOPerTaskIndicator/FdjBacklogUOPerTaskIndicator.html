@@ -22,9 +22,9 @@
          <tbody>
             {foreach from=$fdjBacklogUOPerTaskIndicator_taskArray key=id item=i}
             <tr>
-               <td class="right">{$i.commandes}</td>
+               <td>{$i.commandes}</td>
                <td class="right">{$i.mantisURL} {$i.issueURL}</td>
-               <td class="right">{$i.taskName}</td>
+               <td>{$i.taskName}</td>
                <td class="right">{$i.chargeInitUO}</td>
                <td class="right">{$i.elapsed}</td>
                <td class="right" style="background-color: {$i.uoRemainingColor}">{$i.uoRemaining}</td>

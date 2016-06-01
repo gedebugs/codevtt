@@ -292,7 +292,7 @@ class TimeTrack extends Model {
 
       $issueNote = IssueNote::getTimesheetNote($bug_id);
       if (is_null($issueNote)) {
-         $bugnote_id = IssueNote::create($bug_id, $reporter_id, $text, IssueNote::type_timetrackNote, TRUE, $date);
+         $bugnote_id = IssueNote::create($bug_id, $reporter_id, $text, IssueNote::type_timetrackNote, TRUE, $timetrack->getDate());
       } else {
          # notify users that the note has changed
          $text = IssueNote::removeAllReadByTags($text);
