@@ -11,17 +11,23 @@
       <table class="fdjBacklogUOPerTaskIndicatorValuesTable display float" >
          <thead>
             <tr>
+               <th>Commandes</th>
+               <th>Tâche</th>
                <th>Charge init UO</th>
                <th>Consommé UO</th>
-               <th>Dérive UO</th>
+               <th>UO restant</th>
             </tr>
          </thead>
          <tbody>
+            {foreach from=$fdjBacklogUOPerTaskIndicator_taskArray key=id item=i}
             <tr>
-               <td class="right">{$fdjBacklogUOPerTaskIndicator_taskArray.chargeInitUO}</td>
-               <td class="right">{$fdjBacklogUOPerTaskIndicator_taskArray.elapsed}</td>
-               <td class="right" style="background-color: {$fdjBacklogUOPerTaskIndicator_taskArray.driftColor}">{$fdjBacklogUOPerTaskIndicator_taskArray.drift}</td>
+               <td class="right">{$i.commandes}</td>
+               <td class="right">{$i.taskName}</td>
+               <td class="right">{$i.chargeInitUO}</td>
+               <td class="right">{$i.elapsed}</td>
+               <td class="right" style="background-color: {$i.uoRemainingColor}">{$i.uoRemaining}</td>
             </tr>
+            {/foreach}
          </tbody>
       </table>
       </div>

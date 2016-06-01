@@ -251,42 +251,6 @@ class TimeTrack extends Model {
       return $this->commit_date;
    }
 
-     /**
-    * add/update the TimetheetNote of an Issue
-    * @param type $bug_id
-    * @param type $text
-    */
-   public static function setNote($bug_id, $track_id, $text, $reporter_id) {
-
-      self::$logger->debug("Task $bug_id setTimesheetNote:[$text]");
-
-      // add TAG in front (if not found)
-      if (FALSE === strpos($text, self::tagid_timetrackNote)) {
-         $tag = self::tag_begin . self::tagid_timetrackNote . ' ' . $track_id . self::tag_doNotRemove . self::tag_end;
-         $text = $tag . "\n" . $text;
-      }
-
-      $issueNote = self::getTimesheetNote($bug_id);
-      if (is_null($issueNote)) {
-         $bugnote_id = self::create($bug_id, $reporter_id, $text, self::type_timetrackNote, TRUE);
-      } else {
-         # notify users that the note has changed
-         $text = self::removeAllReadByTags($text);
-
-         $issueNote->setText($text, $reporter_id);
-         $bugnote_id = $issueNote->getId();
-      }
-      
-
-      
-      $query = "INSERT INTO `codev_timetrack_note_table` (timetrackid, noteid) VALUES ($track_id, $bugnote_id)";
-      
-      $result = SqlWrapper::getInstance()->sql_query($query);
-      if (!$result) {
-         echo "<span style='color:red'>ERROR: Query FAILED</span>";
-         exit;
-      }
-   }
    
    public function getNote() {
       
@@ -306,12 +270,47 @@ class TimeTrack extends Model {
          else
          {
             $row = SqlWrapper::getInstance()->sql_fetch_object($result);
-            $this->note = str_replace(array("\r", "\n"), '', $row->note);
             $this->note = strip_tags($this->note);
          }
      }
      return $this->note;
    }
+   
+      public static function setNote($bug_id, $track_id, $text, $reporter_id) {
+      $issue = IssueCache::getInstance()->getIssue($bug_id);
+      $timetrack = TimeTrackCache::getInstance()->getTimeTrack($track_id);
+      self::$logger->debug("Task $bug_id setTimesheetNote:[$text]");
+      
+      // add TAG in front (if not found)
+      if (FALSE === strpos($text, IssueNote::tagid_timetrackNote)) {
+         $task = $issue->getSummary();
+         $extRef = $issue->getTcId();
+         $date = Tools::formatDate("%Y-%m-%d", $timetrack->getDate());
+         
+         $tag = IssueNote::tag_begin . IssueNote::tagid_timetrackNote . ' ' . $date . ' ' . $task . ' ' . $extRef . IssueNote::tag_doNotRemove . IssueNote::tag_end;
+         $text = $tag . "\n" . $text;
+      }
+
+      $issueNote = IssueNote::getTimesheetNote($bug_id);
+      if (is_null($issueNote)) {
+         $bugnote_id = IssueNote::create($bug_id, $reporter_id, $text, IssueNote::type_timetrackNote, TRUE);
+      } else {
+         # notify users that the note has changed
+         $text = IssueNote::removeAllReadByTags($text);
+
+         $issueNote->setText($text, $reporter_id);
+         $bugnote_id = $issueNote->getId();
+      }
+
+      $query = "INSERT INTO `codev_timetrack_note_table` (timetrackid, noteid) VALUES ($track_id, $bugnote_id)";
+      
+      $result = SqlWrapper::getInstance()->sql_query($query);
+      if (!$result) {
+         echo "<span style='color:red'>ERROR: Query FAILED</span>";
+         exit;
+      }
+   }
+   
 }
 TimeTrack::staticInit();
 

@@ -129,7 +129,7 @@ class TimeTrackingController extends Controller {
                $handlerId    = Tools::getSecurePOSTNumberValue('handlerid');
                
                if (1 == $team->getGeneralPreference('useTrackUO')) {
-                  $UOValue      = Tools::getSecurePOSTNumberValue('UO');
+                  $UOValue      = Tools::getSecurePOSTNumberValue('UO', 0);
                }
                if (1 == $team->getGeneralPreference('useTrackNote')) {
                   $issue_note   = filter_input(INPUT_POST, 'issue_note');
@@ -163,7 +163,7 @@ class TimeTrackingController extends Controller {
                   }
                   
                   if (1 == $team->getGeneralPreference('useTrackNote')) {
-                     IssueNote::setTimetrackNote($defaultBugid, $trackid, $issue_note, $managed_userid);
+                     TimeTrack::setNote($defaultBugid, $trackid, $issue_note, $managed_userid);
                   }
                   
                   $issue = IssueCache::getInstance()->getIssue($defaultBugid);

@@ -113,14 +113,14 @@ class UniteOeuvre {
    }
    
    
-   public static function getDriftColor($bugResolvedStatusThreshold, $currentStatus ,$drift = NULL) {
-      if (0 < $drift) {
+   public static function getUORemainingColor($bugResolvedStatusThreshold, $currentStatus ,$drift = NULL) {
+      if (0 > $drift) {
          if ($currentStatus < $bugResolvedStatusThreshold) {
             $color = "#ff6a6e";
          } else {
             $color = "#fcbdbd";
          }
-      } elseif (0 > $drift) {
+      } elseif (0 < $drift) {
          if ($currentStatus < $bugResolvedStatusThreshold) {
             $color = "#61ed66";
          } else {
@@ -132,6 +132,19 @@ class UniteOeuvre {
 
       return $color;
    }
+   
+   public static function getSumUOPerTask($timetracks){
+         $formated_trackids = implode(', ', $timetracks);
+         if($formated_trackids != "") {
+         $query = "SELECT SUM(uo.value) as SumUo FROM `codev_timetracking_table` AS timetrack LEFT JOIN `codev_uo_table` AS uo ON timetrack.id = uo.timetrackid WHERE timetrack.id IN ($formated_trackids) GROUP BY timetrack.bugid";
+         $result = SqlWrapper::getInstance()->sql_query($query);
+         if(SqlWrapper::getInstance()->mysql_num_rows($result) != 0) {
+            return SqlWrapper::getInstance()->sql_result($result, 0);
+         }
+      }
+   }
+   
+  
    
 }
 

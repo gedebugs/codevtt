@@ -166,16 +166,17 @@ class FdjTimetracksPerTaskWithUOIndicator extends IndicatorPluginAbstract {
 //         }
          
       }
-     
       foreach ($timetracks as $trackid => $track) {
          
          $user = UserCache::getInstance()->getUser($track->getUserId());
             $timetracksArray[$trackid] = array(
+               'commandList' => implode(', ', $this->issue->getCommandList()),
+               'task' => $this->issue->getSummary(),
                'user' => $user->getRealname(),
                'dateTimetrack' => Tools::formatDate("%Y-%m-%d", $track->getDate()),
                'categorieProject' => $this->issue->getCategoryName(),
                'note' => $track->getNote(),
-               'uo' => round($UOs[$trackid], 2),
+               'uo' => str_replace('.', ',',round($UOs[$trackid], 2)),
             );
       }
 

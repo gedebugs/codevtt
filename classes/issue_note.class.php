@@ -210,43 +210,7 @@ class IssueNote {
          $bugnote_id = $issueNote->getId();
       }
    }
-   
-     /**
-    * add/update the TimetheetNote of an Issue
-    * @param type $bug_id
-    * @param type $text
-    */
-   public static function setTimetrackNote($bug_id, $track_id, $text, $reporter_id) {
 
-      self::$logger->debug("Task $bug_id setTimesheetNote:[$text]");
-
-      // add TAG in front (if not found)
-      if (FALSE === strpos($text, self::tagid_timetrackNote)) {
-         $tag = self::tag_begin . self::tagid_timetrackNote . ' ' . $track_id . self::tag_doNotRemove . self::tag_end;
-         $text = $tag . "\n" . $text;
-      }
-
-      $issueNote = self::getTimesheetNote($bug_id);
-      if (is_null($issueNote)) {
-         $bugnote_id = self::create($bug_id, $reporter_id, $text, self::type_timetrackNote, TRUE);
-      } else {
-         # notify users that the note has changed
-         $text = self::removeAllReadByTags($text);
-
-         $issueNote->setText($text, $reporter_id);
-         $bugnote_id = $issueNote->getId();
-      }
-      
-
-      
-      $query = "INSERT INTO `codev_timetrack_note_table` (timetrackid, noteid) VALUES ($track_id, $bugnote_id)";
-      
-      $result = SqlWrapper::getInstance()->sql_query($query);
-      if (!$result) {
-         echo "<span style='color:red'>ERROR: Query FAILED</span>";
-         exit;
-      }
-   }
 
    /**
     * when a TimesheetNote is modified, all ReadBy tags must

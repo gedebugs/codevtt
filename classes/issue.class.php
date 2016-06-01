@@ -2052,6 +2052,19 @@ class Issue extends Model implements Comparable {
    public function getVersion() {
       return $this->version;
    }
+   
+   public function getChargeInit() {
+      $customFieldName = 'FDJ_ChargeInit_UO';
+      $query = "SELECT value FROM `mantis_custom_field_string_table` ".
+              "WHERE bug_id=$this->bugId ".
+              "AND field_id = (SELECT id FROM `mantis_custom_field_table` where name = '$customFieldName')";
+
+         $result = SqlWrapper::getInstance()->sql_query($query);
+         if(SqlWrapper::getInstance()->mysql_num_rows($result) != 0) {
+            return SqlWrapper::getInstance()->sql_result($result, 0);
+         }
+         return 0;
+   }
 
    public function getLastUpdate() {
       return $this->last_updated;
