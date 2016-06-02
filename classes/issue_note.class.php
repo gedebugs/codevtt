@@ -79,7 +79,7 @@ class IssueNote {
     * @param type $type
     * @param type $private
     */
-   public static function create($bug_id, $reporter_id, $text='', $type=self::type_bugnote, $private=FALSE) {
+   public static function create($bug_id, $reporter_id, $text='', $type=self::type_bugnote, $private=FALSE, $date_submitted=NULL) {
 
       $view_state = ($private) ? self::viewState_private : self::viewState_public;
       $sqlWrapper = SqlWrapper::getInstance();
@@ -93,9 +93,14 @@ class IssueNote {
       $bugnote_text_id = $sqlWrapper->sql_insert_id();
       
       $timestamp = time();
+      
+      if($date_submitted=NULL){
+         $date_submitted = $timestamp;
+      }
+      
       $query = 'INSERT INTO `mantis_bugnote_table` '.
               '(`bug_id`, `reporter_id`, `view_state`, `note_type`, `bugnote_text_id`, `date_submitted`, `last_modified`) '.
-              "VALUES ('$bug_id', '$reporter_id', '$view_state', '$type', '$bugnote_text_id', '$timestamp', '$timestamp');";
+              "VALUES ('$bug_id', '$reporter_id', '$view_state', '$type', '$bugnote_text_id', '$date_submitted', '$timestamp');";
       $result = $sqlWrapper->sql_query($query);
       if (!$result) {
          echo "<span style='color:red'>ERROR: Query FAILED</span>";
@@ -106,7 +111,7 @@ class IssueNote {
       // log BUGNOTE_ADD in Issue history
       $query3 = 'INSERT INTO `mantis_bug_history_table` '.
 				'( user_id, bug_id, date_modified, type, old_value ) '.
-				"VALUES ( $reporter_id, $bug_id, ".time().', '.self::history_BugnoteAdded.", $bugnote_id)";
+				"VALUES ( $reporter_id, $bug_id, ".$timestamp.', '.self::history_BugnoteAdded.", $bugnote_id)";
       $result3 = $sqlWrapper->sql_query($query3);
       if (!$result3) {
          echo "<span style='color:red'>ERROR: Query FAILED</span>";

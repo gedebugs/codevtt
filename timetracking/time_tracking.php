@@ -162,7 +162,7 @@ class TimeTrackingController extends Controller {
                      }
                   }
                   
-                  if (1 == $team->getGeneralPreference('useTrackNote')) {
+                  if (1 == $team->getGeneralPreference('useTrackNote') && strlen($issue_note)!=0) {
                      TimeTrack::setNote($defaultBugid, $trackid, $issue_note, $managed_userid);
                   }
                   

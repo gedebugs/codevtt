@@ -12,6 +12,7 @@
          <thead>
             <tr>
                <th>Commandes</th>
+               <th>Mantis</th>
                <th>Tâche</th>
                <th>Charge init UO</th>
                <th>Consommé UO</th>
@@ -22,6 +23,7 @@
             {foreach from=$fdjBacklogUOPerTaskIndicator_taskArray key=id item=i}
             <tr>
                <td class="right">{$i.commandes}</td>
+               <td class="right">{$i.mantisURL} {$i.issueURL}</td>
                <td class="right">{$i.taskName}</td>
                <td class="right">{$i.chargeInitUO}</td>
                <td class="right">{$i.elapsed}</td>

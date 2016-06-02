@@ -151,6 +151,8 @@ class FdjBacklogUOPerTaskIndicator extends IndicatorPluginAbstract {
          
          $taskArray[$bugid] = array (
           'commandes' => $CommandeListString,
+          'mantisURL' => Tools::mantisIssueURL($bugid, NULL, true),
+          'issueURL' => Tools::issueInfoURL($bugid),
           'taskName' => $this->issue->getSummary(),
           'chargeInitUO' => str_replace('.', ',',round($chargeInitUO,2)),
           'elapsed' => str_replace('.', ',', round($SumUOArray,2)),
@@ -158,6 +160,8 @@ class FdjBacklogUOPerTaskIndicator extends IndicatorPluginAbstract {
           'uoRemainingColor' => $uoRemainingColor,
       );
       }
+      
+      
 
       $this->execData = array();
       $this->execData['taskArray'] = $taskArray;

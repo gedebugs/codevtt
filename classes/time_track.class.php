@@ -270,7 +270,8 @@ class TimeTrack extends Model {
          else
          {
             $row = SqlWrapper::getInstance()->sql_fetch_object($result);
-            $this->note = strip_tags($this->note);
+            $buffer = preg_replace('/<!--(.|\s)*?-->/', '', $row->note);
+            $this->note = trim($buffer);
          }
      }
      return $this->note;
@@ -283,17 +284,15 @@ class TimeTrack extends Model {
       
       // add TAG in front (if not found)
       if (FALSE === strpos($text, IssueNote::tagid_timetrackNote)) {
-         $task = $issue->getSummary();
-         $extRef = $issue->getTcId();
          $date = Tools::formatDate("%Y-%m-%d", $timetrack->getDate());
          
-         $tag = IssueNote::tag_begin . IssueNote::tagid_timetrackNote . ' ' . $date . ' ' . $task . ' ' . $extRef . IssueNote::tag_doNotRemove . IssueNote::tag_end;
+         $tag = IssueNote::tag_begin . IssueNote::tagid_timetrackNote . ' ' . $date . ' ' . IssueNote::tag_doNotRemove . IssueNote::tag_end;
          $text = $tag . "\n" . $text;
       }
 
       $issueNote = IssueNote::getTimesheetNote($bug_id);
       if (is_null($issueNote)) {
-         $bugnote_id = IssueNote::create($bug_id, $reporter_id, $text, IssueNote::type_timetrackNote, TRUE);
+         $bugnote_id = IssueNote::create($bug_id, $reporter_id, $text, IssueNote::type_timetrackNote, TRUE, $date);
       } else {
          # notify users that the note has changed
          $text = IssueNote::removeAllReadByTags($text);

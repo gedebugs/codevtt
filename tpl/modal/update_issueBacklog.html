@@ -302,14 +302,19 @@
 			//}, 500);
 		}
 
-		function checkRegexp(o, regexp, n) {
-			if (!(regexp.test(o.val()))) {
-				o.addClass("ui-state-error");
-				updateTips(n);
-				return false;
-			} else {
-				return true;
-			}
+		function checkRegexp(o, regexp, n, isNullable) {
+			if(isNullable && $.trim(o.val()) == ''){
+            return true;
+         }
+         else{
+            if (!(regexp.test(o.val()))) {
+               o.addClass("ui-state-error");
+               updateTips(n);
+               return false;
+            } else {
+               return true;
+            }
+         }
 		}
 
 		function checkStatus(backlog, selectedStatus, bugResolvedStatusThreshold, bugStatusNew, statusNameNew) {
@@ -329,7 +334,7 @@
 		function isBacklogDialogFieldsValid() {
 			var bValid = true;
 			backlog.removeClass("ui-state-error");
-			bValid = bValid && checkRegexp(jQuery("#backlog"), /^[0-9]+(\.[0-9][0-9]?5?)?$/i, "format:  '1',  '0.3'  or  '2.55' or '2.125'");
+			bValid = bValid && checkRegexp(jQuery("#backlog"), /^[0-9]+(\.[0-9][0-9]?5?)?$/i, "format:  '1',  '0.3'  or  '2.55' or '2.125'", false){if $isU0Displayed} && (checkRegexp(jQuery("#UO"), /^[0-9]+(\.[0-9][0-9]?5?)?$/i, "format:  '1',  '0.3'  or  '2.55' or '2.125'", true)){/if};
 			
 			var bugResolvedStatusThreshold = jQuery("#bugResolvedStatusThreshold").val();
 			var bugStatusNew = jQuery("#bugStatusNew").val();
