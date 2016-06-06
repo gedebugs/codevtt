@@ -97,6 +97,26 @@ class IssueExtIdFilter implements IssueSelectionFilter {
    }
 
    public function execute(IssueSelection $inputIssueSel, array $params = NULL) {
+   
+   	$this->checkParams($inputIssueSel, $params);
+   
+   	if (NULL == $this->outputList) {
+   		$this->outputList = array();
+   		$issueList = $inputIssueSel->getIssueList();
+   		foreach ($issueList as $issue) {
+   			$tag = "EXTREF_".$issue->getTcId();
+   
+   			if (!array_key_exists($tag, $this->outputList)) {
+   				$this->outputList[$tag] = new IssueSelection($issue->getTcId());
+   			}
+   			$this->outputList[$tag]->addIssue($issue->getId());
+   		}
+   		ksort($this->outputList);
+   	}
+   	return $this->outputList;
+   }
+  /*  
+   public function execute(IssueSelection $inputIssueSel, array $params = NULL) {
 
       $this->checkParams($inputIssueSel, $params);
 
@@ -155,7 +175,7 @@ class IssueExtIdFilter implements IssueSelectionFilter {
 
       return $this->outputList;
    }
-
+*/
 }
 
 // Initialize complex static variables
