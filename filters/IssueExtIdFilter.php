@@ -115,67 +115,6 @@ class IssueExtIdFilter implements IssueSelectionFilter {
    	}
    	return $this->outputList;
    }
-  /*  
-   public function execute(IssueSelection $inputIssueSel, array $params = NULL) {
-
-      $this->checkParams($inputIssueSel, $params);
-
-      if (is_null($this->outputList)) {
-         $this->outputList = array();
-
-         $issueList = $inputIssueSel->getIssueList();
-         foreach ($issueList as $issue) {
-
-            $extId = $issue->getTcId();
-
-            if (!is_null($this->filterCriteria)) {
-
-               if ((in_array(IssueExtIdFilter::tag_with_extRef, $this->filterCriteria)) &&
-                (empty($extId))) {
-                  continue;
-               }
-               if ((in_array(IssueExtIdFilter::tag_no_extRef, $this->filterCriteria)) &&
-                (!empty($extId))) {
-                  continue;
-               }
-            }
-
-            if (!empty($extId)) {
-
-               if (!array_key_exists(IssueExtIdFilter::tag_with_extRef, $this->outputList)) {
-                  $displayName = IssueExtIdFilter::tag_with_extRef;
-                  $this->outputList[IssueExtIdFilter::tag_with_extRef] = new IssueSelection($displayName);
-               }
-               $this->outputList[IssueExtIdFilter::tag_with_extRef]->addIssue($issue->getId());
-
-               if (self::$logger->isDebugEnabled()) {
-                  self::$logger->trace('execute: Issue '.$issue->getId().' extId = '.$extId);
-               }
-            } else {
-
-               if (!array_key_exists(IssueExtIdFilter::tag_no_extRef, $this->outputList)) {
-                  $displayName = IssueExtIdFilter::tag_no_extRef;
-                  $this->outputList[IssueExtIdFilter::tag_no_extRef] = new IssueSelection($displayName);
-               }
-               $this->outputList[IssueExtIdFilter::tag_no_extRef]->addIssue($issue->getId());
-
-               if (self::$logger->isDebugEnabled()) {
-                  self::$logger->trace('execute: Issue '.$issue->getId().' extId Not defined');
-               }
-            }
-         }
-
-         if (self::$logger->isDebugEnabled()) {
-            self::$logger->debug('input Nb Issues ='.$inputIssueSel->getNbIssues());
-            foreach ($this->outputList as $tag => $iSel) {
-               self::$logger->debug('Tag {'.$tag.'} Nb Issues ='.$iSel->getNbIssues());
-            }
-         }
-      }
-
-      return $this->outputList;
-   }
-*/
 }
 
 // Initialize complex static variables
